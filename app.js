@@ -32,16 +32,16 @@ const runQueries = async () => {
 
         switch(action) {
             case 1:
-                createCustomer();
+                await createCustomer();
                 break;
             case 2:
-                viewCustomers();
+                await viewCustomers();
                 break;
             case 3:
-                updateCustomer();
+                await updateCustomer();
                 break;
             case 4:
-                deleteCustomer();
+                await deleteCustomer();
                 break;
             default:
                 console.log(`That wasn't a valid option. Please try again.`);
@@ -86,15 +86,17 @@ const updateCustomer = async() => {
 
     const custId = prompt('Type the ID of the customer you want to update.');
     const custNewName = prompt('Type the new name of selected customer:');
-    const custNewage = parseInt(prompt('Type new age of selected customer:'));
+    const custNewAge = parseInt(prompt('Type new age of selected customer:'));
     
-    const updatedCust = await customer.findByIdAndUpdate(
-        custId,
-        { name: custNewName },
-        { age: custNewage }
-    );
+    const custToUpdate = await customer.findById(custId);
+ 
+    custToUpdate.name = custNewName;
+    custToUpdate.age = custNewAge; 
+    await custToUpdate.save();
 
+    const updatedCust = await customer.findById(custId);
     console.log("Updated customer:", updatedCust);
+
 };
 
 const deleteCustomer = async() => {
